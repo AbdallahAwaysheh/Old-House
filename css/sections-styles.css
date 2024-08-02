@@ -288,3 +288,14 @@
 .team-member a:hover {
     text-decoration: underline;
 }
+
+@media (max-width: 992px) {
+    .image-section {
+        display: none;
+    }
+
+    .right-column {
+        display: none;
+
+    }
+}

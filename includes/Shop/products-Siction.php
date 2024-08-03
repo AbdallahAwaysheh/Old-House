@@ -3,16 +3,16 @@ include "./includes/Shop/readProducts.php";
 
 $productsObject = new Products();
 $products = $productsObject->readProducts();
-echo "<pre>";
-
-echo "</pre>";
-
 ?>
 
 <!-- HTML -->
 <section class="product-listing">
     <div class="grid-container">
-        <h1><?php echo $_GET["category_name"]; ?></h1>
+        <h1><?php if (isset($_GET["category_name"])) {
+                echo $_GET["category_name"];
+            } else {
+                echo "All Products";
+            } ?></h1>
         <div class="products">
 
             <?php if (isset($_GET['category_id'])) : ?>

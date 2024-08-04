@@ -60,15 +60,9 @@
              <div class="menu-sidebar__content js-scrollbar1">
                  <nav class="navbar-sidebar">
                      <ul class="list-unstyled navbar__list">
-                         <li class="active has-sub">
-                             <a class="js-arrow" href="#">
-                                 <i class="fas fa-tachometer-alt"></i>Order Managment</a>
-                             <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                 <li>
-                                     <a href="index.html">Dashboard 1</a>
-                                 </li>
-
-                             </ul>
+                         <li>
+                             <a href="../main/index.php">
+                                 <i class="fas fa-chart-bar"></i>DashBoard</a>
                          </li>
 
                          <li>

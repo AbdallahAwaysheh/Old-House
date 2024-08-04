@@ -1,8 +1,8 @@
 <?php
 if (isset($_GET['cat_id'])) {
-    include("../includes/connection.php");
+    include("../includes/connection2.php");
     $id = $_GET['cat_id'];
-    $sql = "UPDATE Categories SET delete_status = 'yes' WHERE cat_id ='$id'";
+    $sql = "UPDATE Category SET delete_status = 'yes' WHERE cat_id ='$id'";
     if (mysqli_query($conn, $sql)) {
         session_start();
         $_SESSION["delete"] = "category Deleted Successfully!";

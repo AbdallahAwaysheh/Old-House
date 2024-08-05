@@ -1,14 +1,14 @@
 <?php
 session_start(); // Start session to store feedback messages
 
-include("../includes/connection.php");
+include("../includes/connection2.php");
 
 // Fetch the category details if cat_id is set in the URL
 if (isset($_GET['cat_id'])) {
     $cat_id = $_GET['cat_id'];
 
     // Fetch the category details based on cat_id
-    if ($stmt = $conn->prepare("SELECT cat_id, cat_name FROM Categories WHERE cat_id = ?")) {
+    if ($stmt = $conn->prepare("SELECT cat_id, cat_name FROM Category WHERE cat_id = ?")) {
         $stmt->bind_param("i", $cat_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["edit_cat"])) {
     $cat_id = $_POST["Category_id"];
     $cat_name = $_POST["Category_Name"];
 
-    if ($stmt = $conn->prepare("UPDATE Categories SET cat_name = ? WHERE cat_id = ?")) {
+    if ($stmt = $conn->prepare("UPDATE Category SET cat_name = ? WHERE cat_id = ?")) {
         // Bind parameters
         $stmt->bind_param("si", $cat_name, $cat_id);
 

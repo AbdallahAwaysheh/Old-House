@@ -45,7 +45,7 @@ try {
     } else {
         throw new Exception("Failed to fetch testimonials.");
     }
-} catch(Exception $e) {
+} catch (Exception $e) {
     $_SESSION['error'] = "Error: " . $e->getMessage();
 }
 $conn->close();
@@ -84,7 +84,7 @@ include("../includes/header.php");
     </div>
 </div>
 
-<div class="row">
+<div class="row overflow">
     <div class="col-md-12">
         <!-- DATA TABLE -->
         <h3 class="title-5 m-b-35">Testimonial List</h3>
@@ -101,7 +101,7 @@ include("../includes/header.php");
                 </thead>
                 <tbody>
                     <?php if (!empty($testimonials)) : ?>
-                        <?php foreach ($testimonials  as $testimonial ) : ?>
+                        <?php foreach ($testimonials  as $testimonial) : ?>
                             <tr class="tr-shadow">
                                 <td><?= htmlspecialchars($testimonial["test_id"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($testimonial["test_content"], ENT_QUOTES, 'UTF-8') ?></td>

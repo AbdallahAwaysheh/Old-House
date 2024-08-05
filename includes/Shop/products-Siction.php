@@ -21,7 +21,7 @@ $products = $productsObject->readProducts();
                 <?php if (!empty($categoryProducts)) : ?>
                     <!-- Loop Over products -->
                     <?php foreach ($categoryProducts as $product) : ?>
-                        <form method="POST" action="./includes/cart-handler.php" class="product-card-form">
+                        <form method="POST" action="./includes/add-to-cart-handler.php" class="product-card-form">
                             <input type="hidden" name="product_id_button" value="<?php echo htmlspecialchars($product["pro_id"]); ?>">
                             <input type="hidden" name="product_quantity_button" value="1">
                             <div class="product-card">
@@ -53,7 +53,7 @@ $products = $productsObject->readProducts();
                 <?php if (!empty($products)) : ?>
                     <!-- Loop Over products -->
                     <?php foreach ($products as $product) : ?>
-                        <form method="POST" action="./includes/cart-handler.php" class="product-card-form">
+                        <form method="POST" action="./includes/add-to-cart-handler.php" class="product-card-form">
                             <input type="hidden" name="product_id_button" value="<?php echo htmlspecialchars($product["pro_id"]); ?>">
                             <input type="hidden" name="product_quantity_button" value="1">
                             <div class="product-card">

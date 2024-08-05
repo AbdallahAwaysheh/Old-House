@@ -21,7 +21,7 @@ $totalSlides = ceil($totalImages / $imagesPerSlide);
                 ?>
                 <div class="product">
                     <img src=".<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" style="width:100px">
-                    <div class="text"><?php echo htmlspecialchars($image['productName'], ENT_QUOTES, 'UTF-8'); ?></div>
+                    <div class="text"><?php echo htmlspecialchars($image['pro_name'], ENT_QUOTES, 'UTF-8'); ?></div>
                 </div>
             <?php endfor; ?>
         </div>

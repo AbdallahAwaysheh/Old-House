@@ -1,4 +1,4 @@
-<div class="features-section">
+<div class="features-section fade">
     <div class="images-container">
         <div class="image-section">
             <img src="images/img-grid-1.jpg" alt="Living Room" class="image1">

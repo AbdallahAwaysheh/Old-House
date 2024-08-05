@@ -1,5 +1,6 @@
 <?php
 include_once "./includes/connect.php";
+
 class Categories extends OldHouseDB
 {
     public $categories = [];

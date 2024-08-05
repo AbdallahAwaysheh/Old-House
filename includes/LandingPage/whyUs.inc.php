@@ -1,5 +1,5 @@
 <main>
-    <div class="whyUs">
+    <div class="whyUs fade">
         <div class="why-choose-section">
             <div class="section1-container">
                 <div class="row">

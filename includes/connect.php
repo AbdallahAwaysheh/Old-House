@@ -1,13 +1,16 @@
 <?php
-
 class OldHouseDB
 {
     private $hostname = "localhost";
-    private $dbname = "oldhouse";
+    private $dbname = "shopping2";
     private $username = "root";
     private $password = "";
     public $conn;
 
+    public function __construct()
+    {
+        $this->connect();
+    }
 
     public function connect()
     {

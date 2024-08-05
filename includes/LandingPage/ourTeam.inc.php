@@ -1,4 +1,4 @@
-<div class="ourTeam">
+<div class="ourTeam fade">
     <section class="team-section">
         <h2>Our Team</h2>
         <div class="team-container">

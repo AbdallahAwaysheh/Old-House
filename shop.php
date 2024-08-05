@@ -1,7 +1,7 @@
 <?php include("./includes/header.php"); ?>
 
-<div class="location">
-	
+<div class="location fade">
+
 </div>
 </header>
 <main>

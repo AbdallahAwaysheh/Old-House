@@ -1,4 +1,4 @@
-<div class="hero-section">
+<div class="hero-section fade">
     <section class="sectiondisplay" id="home">
 
         <div class="massege">

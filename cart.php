@@ -1,14 +1,21 @@
 <?php
-// counters
-static $subtotal = 0;
+include("./includes/connect.php");
+include("./includes/Shop/Cart.inc.php");
+
+$cart = new Cart();
+$cartItems = $cart->getCartItems();
+$subtotal = $cart->getSubtotal();
+$tax = $subtotal * 0.1;
+$total = $subtotal + $tax;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Cart</title>
 	<link rel="stylesheet" href="./css/style.css?v=<?php echo time(); ?>">
 </head>
 
@@ -29,32 +36,29 @@ static $subtotal = 0;
 					<th class="table-header-cell">Total</th>
 					<th class="table-header-cell">Remove</th>
 				</tr>
-				<!-- Example of looping through products -->
-				<?php if (!empty($products)) : ?>
-					<?php foreach ($products as $product) : ?>
-						<?php if (isset($product["cat_id"])) : ?>
-							<tr class="table-row">
-								<td>
-									<div class="product-image">
-										<img src="./images/product-1.png" alt="Product 1">
-									</div>
-								</td>
-								<td><?php echo $product["pro_name"]; ?></td>
-								<td><?php echo $product["pro_price"]; ?> JOD</td>
-								<td>
-									<form action="<?php $_SERVER["PHP_SELF"]; ?>" method="POST">
-										<input class="quantity" type="number" value="1" min="1" max="99" name="quantity">
-										<button type="submit">Update </button>
-									</form>
-								</td>
-								<td><?php echo $product["pro_price"] * $_POST["quantity"]; ?> JOD</td>
-								<td>
-									<a href="#"><img class="remove-icon" src="./images/removeIcon.svg" alt="Remove"></a>
-								</td>
-							</tr>
-						<?php endif; ?>
+				<?php if (!empty($cartItems)) : ?>
+					<?php foreach ($cartItems as $product) : ?>
+						<tr class="table-row">
+							<td>
+								<div class="product-image">
+									<img src=".<?php echo htmlspecialchars($product['img_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?>">
+								</div>
+							</td>
+							<td><?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?></td>
+							<td><?php echo number_format($product['pro_price'], 2); ?> JOD</td>
+							<td>
+								<form action="./includes/cart-handler.php" method="POST">
+									<input type="hidden" name="product_id" value="<?php echo $product['pro_id']; ?>">
+									<input class="quantity" type="number" value="<?php echo $product['quantity']; ?>" min="1" max="99" name="product_quantity">
+									<button type="submit">Update</button>
+								</form>
+							</td>
+							<td><?php echo number_format($product['total_price'], 2); ?> JOD</td>
+							<td>
+								<a href="includes/cart-handler.php?remove=<?php echo $product['pro_id']; ?>"><img class="remove-icon" src="./images/removeIcon.svg" alt="Remove"></a>
+							</td>
+						</tr>
 					<?php endforeach; ?>
-					<!-- Repeat similar rows as needed -->
 			</table>
 		<?php else : ?>
 			<p class="red-Color">There are no Products in The cart</p>
@@ -65,15 +69,15 @@ static $subtotal = 0;
 			<table>
 				<tr class="table-row">
 					<th class="table-header-cell">Subtotal</th>
-					<td class="table-cell">148.5 JOD</td>
+					<td class="table-cell"><?php echo number_format($subtotal, 2); ?> JOD</td>
 				</tr>
 				<tr class="table-row">
 					<th class="table-header-cell">Tax</th>
-					<td class="table-cell">14.85 JOD</td>
+					<td class="table-cell"><?php echo number_format($tax, 2); ?> JOD</td>
 				</tr>
 				<tr class="table-row">
 					<th class="table-header-cell">Total</th>
-					<td class="table-cell">163.35 JOD</td>
+					<td class="table-cell"><?php echo number_format($total, 2); ?> JOD</td>
 				</tr>
 			</table>
 			<div class="checkout-button-container">

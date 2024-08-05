@@ -5,7 +5,7 @@ $categoriesClass = new Categories();
 $categories = $categoriesClass->readCats();
 ?>
 <!-- HTML -->
-<section class="category-section">
+<section class="category-section fade">
     <div class="container">
         <h1>Categories</h1>
         <div class="categories">

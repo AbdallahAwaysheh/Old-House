@@ -16,13 +16,15 @@ $categories = $categoriesClass->readCats();
             <!-- categories loop -->
             <?php if (!empty($categories)) : ?>
                 <?php foreach ($categories as $category) : ?>
-                    <form method="GET" action="<?php echo $_SERVER["PHP_SELF"] ?>">
-                        <input type="hidden" name="category_id" value="<?php echo $category["cat_id"]; ?>">
-                        <input type="hidden" name="category_name" value="<?php echo $category["cat_name"]; ?>">
-                        <button type="submit" class="category-button">
-                            <?php echo $category["cat_name"]; ?>
-                        </button>
-                    </form>
+                    <?php if ($category['delete_status'] == "no") : ?>
+                        <form method="GET" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+                            <input type="hidden" name="category_id" value="<?php echo $category["cat_id"]; ?>">
+                            <input type="hidden" name="category_name" value="<?php echo $category["cat_name"]; ?>">
+                            <button type="submit" class="category-button">
+                                <?php echo $category["cat_name"]; ?>
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             <?php else : ?>
                 <h1>There are no Categories</h1>

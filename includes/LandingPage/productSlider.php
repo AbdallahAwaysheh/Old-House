@@ -20,7 +20,8 @@ $totalSlides = ceil($totalImages / $imagesPerSlide);
                 $image = $images[$imageNumberInArray];
                 ?>
                 <div class="product">
-                    <img src=".<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" style="width:100px">
+                    <img src="../../adminDashOldHouse/uploads/<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" style="width:100px" alt="">
+                    <!-- <img src=" .<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" style="width:100px"> -->
                     <div class="text"><?php echo htmlspecialchars($image['pro_name'], ENT_QUOTES, 'UTF-8'); ?></div>
                 </div>
             <?php endfor; ?>

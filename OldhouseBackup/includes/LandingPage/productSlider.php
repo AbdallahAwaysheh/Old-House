@@ -1,15 +1,3 @@
-<?php
-include "./includes/Shop/readProducts.php";
-
-$productsClass = new Products();
-$images = $productsClass->getProductImagesWithNamesLimited(12); // Fetch only 12 images with names
-
-// Divide images into slides
-$imagesPerSlide = 3; // Number of images per slide
-$totalImages = count($images);
-$totalSlides = ceil($totalImages / $imagesPerSlide);
-?>
-
 <div class="slideshow-container">
     <?php for ($slideIndex = 0; $slideIndex < $totalSlides; $slideIndex++) : ?>
         <div class="mySlides fade">
@@ -20,17 +8,15 @@ $totalSlides = ceil($totalImages / $imagesPerSlide);
                 $image = $images[$imageNumberInArray];
                 ?>
                 <div class="product">
-                    <img src="../../adminDashOldHouse/uploads/<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" style="width:100px" alt="">
-                    <!-- <img src=" .<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" style="width:100px"> -->
-
+                    <img src="./adminDashOldHouse/uploads/<?php echo $image['img_path']; ?>" alt="Product Image">
                 </div>
             <?php endfor; ?>
         </div>
     <?php endfor; ?>
-
     <a class="prev" onclick="plusSlides(-1)">❮</a>
     <a class="next" onclick="plusSlides(1)">❯</a>
 </div>
+
 <br>
 
 <div style="text-align:center">

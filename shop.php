@@ -1,6 +1,9 @@
-<?php include("./includes/header.php"); ?>
+<?php
+require_once("./includes/connect.php");
+include("./includes/header.php");
+?>
 
-<div class="location fade">
+<div class="location">
 
 </div>
 </header>

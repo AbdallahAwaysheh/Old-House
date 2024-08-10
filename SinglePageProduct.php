@@ -1,13 +1,7 @@
 <?php
-
-include("includes/Shop/Cats.php");
-include("includes/Shop/readProducts.php");
-
-// $productId = isset($_GET['pro_id']) ? intval($_GET['pro_id']) : 0;
 $productId = $_GET['pro_id'];
-$productsClass = new Products();
-$product = $productsClass->getProductById($productId);
-$productImages = $productsClass->getProductImages($productId);
+
+
 ?>
 
 <?php include "./includes/header.php"; ?>

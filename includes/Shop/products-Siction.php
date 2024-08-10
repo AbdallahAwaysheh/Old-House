@@ -1,12 +1,11 @@
 <?php
-include("./includes/Shop/readProducts.php");
 
 $productsObject = new Products();
 $products = $productsObject->readProducts();
 ?>
 
 <!-- HTML -->
-<section class="product-listing fade">
+<section class="product-listing">
     <div class="grid-container">
         <h1><?php if (isset($_GET["category_name"])) {
                 echo htmlspecialchars($_GET["category_name"]);
@@ -28,10 +27,10 @@ $products = $productsObject->readProducts();
                                 <div class="product-card">
                                     <div class="product-image">
                                         <a href="SinglePageProduct.php?pro_id=<?php echo htmlspecialchars($product['pro_id']); ?>">
-                                            <img src=".<?php
-                                                        $productImage = $productsObject->getProductImage($product["pro_id"]);
-                                                        echo htmlspecialchars($productImage, ENT_QUOTES, 'UTF-8');
-                                                        ?>">
+                                            <img src="./adminDashOldHouse/uploads/<?php
+                                                                                    $productImage = $productsObject->getProductImage($product["pro_id"]);
+                                                                                    echo $productImage;
+                                                                                    ?>">
                                         </a>
                                     </div>
                                     <div class="product-info">

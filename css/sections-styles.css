@@ -305,9 +305,9 @@
     position: relative;
     margin: auto;
     margin-top: 50px;
+    /* height: 300px; */
 }
 
-/* Next & previous buttons */
 .prev,
 .next {
     cursor: pointer;
@@ -324,20 +324,17 @@
     user-select: none;
 }
 
-/* Position the "next button" to the right */
 .next {
     right: 0;
     border-radius: 3px 0 0 3px;
 }
 
-/* On hover, add a black background color with a little bit see-through */
 .prev:hover,
 .next:hover {
     color: white;
     background-color: rgba(0, 0, 0, 0.8);
 }
 
-/* Caption text */
 .text {
     color: black;
     font-size: 15px;
@@ -347,7 +344,6 @@
     text-align: center;
 }
 
-/* The dots/bullets/indicators */
 .dot {
     cursor: pointer;
     height: 15px;
@@ -362,8 +358,10 @@
 .mySlides {
     display: none;
     flex: 1;
-    justify-content: space-evenly;
+    justify-content:center;
+    gap: 5px;
     align-items: center;
+    
 }
 
 .product {
@@ -373,6 +371,15 @@
     align-items: center;
     background-color: #EFEFEF;
     border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    /* gap: 5px; */
+}
+
+.product img {
+    width:100%;
+    border-radius: 10px;
+    border: 2px solid lightgray;
 }
 
 .active,
@@ -380,7 +387,6 @@
     background-color: #717171;
 }
 
-/* Fading animation */
 .fade {
     animation-name: fade;
     animation-duration: 1.5s;
@@ -390,15 +396,12 @@
     from {
         opacity: .4
     }
-
     to {
         opacity: 1
     }
 }
 
-/* On smaller screens, decrease text size */
 @media only screen and (max-width: 300px) {
-
     .prev,
     .next,
     .text {

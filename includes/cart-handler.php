@@ -4,7 +4,9 @@ include("./Shop/Cart.inc.php");
 $database = new OldHouseDB();
 $conn = $database->conn;
 
-$cart = new Cart($conn);
+$cart = new Cart($userID);
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['product_id']) && isset($_POST['product_quantity'])) {

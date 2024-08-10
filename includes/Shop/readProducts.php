@@ -64,9 +64,8 @@ class Products extends OldHouseDB
     public function getProductImagesWithNamesLimited($limit)
     {
         $this->connect();
-        $sql = "SELECT ip.img_id, ip.img_path, ip.pro_id, p.pro_name
-                FROM img_pro ip
-                JOIN products p ON ip.pro_id = p.pro_id
+        $sql = "SELECT img_id, img_path
+                FROM img_slider 
                 LIMIT ?;";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $limit);

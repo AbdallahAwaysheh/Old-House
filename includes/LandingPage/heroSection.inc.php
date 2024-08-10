@@ -1,4 +1,4 @@
-<div class="hero-section fade">
+<div class="hero-section">
     <section class="sectiondisplay" id="home">
 
         <div class="massege">
@@ -9,7 +9,13 @@
                 </p>
             </div>
             <div class="hero-buttons">
-                <a href="#">start now</a>
+                <a href="<?php
+                            if (isset($userID)) {
+                                echo "./shop.php";
+                            } else {
+                                echo "./adminDashOldHouse/login/login.php";
+                            }
+                            ?>">start now</a>
                 <a href="#" class="calltoaction">explore</a>
             </div>
         </div>

@@ -1,4 +1,4 @@
-<footer class="footer fade">
+<footer class="footer">
     <div class="footer-container">
         <div class="footer-section">
             <h4>About Us</h4>

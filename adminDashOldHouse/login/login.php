@@ -23,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                     $_SESSION['user_id'] = $user['cus_id'];
                     $_SESSION['user_type'] = $user['user_type'];
 
-                    $redirect = ($user['user_type'] == 'admin') ? "../main/index.php" : "http://localhost";
+                    // Redirect based on user type
+                    $redirect = ($user['user_type'] == 'admin') ? "../main/index.php" : "http://localhost/learnphp/Old-House/";
                     header("Location: $redirect");
                     exit();
                 } else {

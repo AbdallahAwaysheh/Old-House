@@ -2,21 +2,27 @@
 session_start();
 include("../includes/connection2.php");
 
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $type = $_SESSION['flash_type'];
+    unset($_SESSION['flash_message']);
+    unset($_SESSION['flash_type']);
+    echo "<div class='alert alert-{$type}'>{$message}</div>";
+}
+
 // add testimonial
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_test"])) {
     $test_cont = trim($_POST['Testimonial_Content']);
     $test_author = trim($_POST["Testimonial_Author"]);
 
     if (!empty($test_cont) && !empty($test_author)) {
-
         try {
             $sqlInsert = "INSERT INTO testimonials (test_content, author) VALUES (?, ?)";
             $stmt = $conn->prepare($sqlInsert);
-
             $stmt->bind_param("ss", $test_cont, $test_author);
 
             if ($stmt->execute()) {
-                $_SESSION['message'] = "testimonial added successfully!";
+                $_SESSION['message'] = "Testimonial added successfully!";
             } else {
                 throw new Exception("Failed to add testimonial.");
             }
@@ -26,16 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_test"])) {
             $stmt->close();
         }
     } else {
-        $_SESSION['error'] = "author name and content cannot be empty.";
+        $_SESSION['error'] = "Author name and content cannot be empty.";
     }
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
-// fetch testimonial
+// fetch testimonials
 $testimonials = [];
 try {
-    $sql = "select test_id,test_content,author from testimonials WHERE  delete_status = 'no' order by test_id ";
+    $sql = "SELECT test_id, test_content, author FROM testimonials WHERE delete_status = 'no' ORDER BY test_id";
     $result = $conn->query($sql);
     if ($result) {
         while ($row = $result->fetch_assoc()) {
@@ -48,14 +54,51 @@ try {
 } catch (Exception $e) {
     $_SESSION['error'] = "Error: " . $e->getMessage();
 }
-$conn->close();
 
-include("../includes/header.php");
+// Handle deletion
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['test_id'])) {
+    $deleteSuccess = false;
+    $testID = $_POST['test_id'];
+
+    $conn->begin_transaction();
+
+    try {
+        $stmt = $conn->prepare("UPDATE testimonials SET delete_status = 'yes' WHERE test_id = ?");
+        $stmt->bind_param("i", $testID);
+        $stmt->execute();
+        $stmt->close();
+
+        $conn->commit();
+        $deleteSuccess = true;
+        $_SESSION['delete_success'] = true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['delete_error'] = "Error deleting testimonial: " . $e->getMessage();
+    }
+
+    // Redirect to avoid form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
 ?>
+
+<?php if (isset($deleteSuccess)) : ?>
+    <script>
+        window.onload = function() {
+            <?php if ($deleteSuccess) : ?>
+                Swal.fire('Deleted!', 'The testimonial has been deleted successfully.', 'success');
+            <?php else : ?>
+                Swal.fire('Error!', '<?php echo $errorMessage; ?>', 'error');
+            <?php endif; ?>
+        }
+    </script>
+<?php endif; ?>
+
+<?php include("../includes/header.php"); ?>
 
 <div class="card m-t-25">
     <div class="card-header">
-        <strong>Add testimonial</strong> Form
+        <strong>Add Testimonial</strong> Form
     </div>
     <div class="card-body card-block">
         <?php
@@ -70,7 +113,7 @@ include("../includes/header.php");
         <form action="" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="Testimonial_Content" class="form-control-label">Testimonial Content</label>
-                <input type="text" id="Testimonial_Content" name="Testimonial_Content" placeholder="Enter Content..." class="form-control" required>
+                <textarea type="text" id="Testimonial_Content" name="Testimonial_Content" class="form-control" rows="6" required></textarea>
             </div>
             <div class="form-group">
                 <label for="Testimonial_Author" class="form-control-label">Testimonial Author</label>
@@ -96,12 +139,11 @@ include("../includes/header.php");
                         <th>Testimonial Content</th>
                         <th>Testimonial Author</th>
                         <th>Actions</th>
-
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($testimonials)) : ?>
-                        <?php foreach ($testimonials  as $testimonial) : ?>
+                        <?php foreach ($testimonials as $testimonial) : ?>
                             <tr class="tr-shadow">
                                 <td><?= htmlspecialchars($testimonial["test_id"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($testimonial["test_content"], ENT_QUOTES, 'UTF-8') ?></td>
@@ -111,9 +153,12 @@ include("../includes/header.php");
                                         <a href="update_test.php?test_id=<?= htmlspecialchars($testimonial['test_id'], ENT_QUOTES, 'UTF-8') ?>" class="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                             <i class="zmdi zmdi-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0);" class="item" data-toggle="tooltip" data-placement="top" title="Delete" onclick="confirmDelete(<?= $testimonial['test_id']; ?>)">
-                                            <i class="zmdi zmdi-delete"></i>
-                                        </a>
+                                        <form id='deleteForm<?= $testimonial['test_id']; ?>' action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post' style='display:inline;'>
+                                            <input type='hidden' name='test_id' value='<?= $testimonial['test_id']; ?>'>
+                                            <button type='button' onclick='confirmDelete(<?= $testimonial["test_id"]; ?>)' class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -130,8 +175,9 @@ include("../includes/header.php");
         <!-- END DATA TABLE -->
     </div>
 </div>
+
 <script>
-    function confirmDelete(catId) {
+    function confirmDelete(testId) {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -143,11 +189,27 @@ include("../includes/header.php");
         }).then((result) => {
             if (result.isConfirmed) {
                 // Redirect to the delete page
-                window.location.href = "delete_test.php?test_id=" + catId;
+                window.location.href = "delete_test.php?test_id=" + testId;
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if deletion was confirmed and successful
+        if (sessionStorage.getItem('deleteConfirmed') === 'true') {
+            sessionStorage.removeItem('deleteConfirmed');
+            <?php
+            if (isset($_SESSION['delete_success'])) {
+                unset($_SESSION['delete_success']);
+                echo "Swal.fire('Deleted!', 'The testimonial has been deleted successfully.', 'success');";
+            } elseif (isset($_SESSION['delete_error'])) {
+                $errorMessage = $_SESSION['delete_error'];
+                unset($_SESSION['delete_error']);
+                echo "Swal.fire('Error!', '" . addslashes($errorMessage) . "', 'error');";
+            }
+            ?>
+        }
+    });
 </script>
-<?php
-include("../includes/footer.php");
-?>
+
+<?php include("../includes/footer.php"); ?>

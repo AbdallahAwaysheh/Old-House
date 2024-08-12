@@ -134,7 +134,13 @@
     font-family: Arial, sans-serif;
     background-color: #ffffff;
 }
-
+.images-container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    max-width: 500px;
+}
 .images-container1 {
     display: flex;
     justify-content: center;
@@ -242,51 +248,8 @@
     background-color: #555;
 }
 
-.team-section {
-    text-align: center;
-    padding: 50px 0;
-}
-
-.team-section h2 {
-    margin-bottom: 30px;
-    font-size: 36px;
-}
-
-.team-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.team-member {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 250px;
-    text-align: center;
-}
-
-.team-member img {
-    width: 100%;
-    border-radius: 50%;
-    margin-bottom: 15px;
-}
-
-.team-member h3 {
-    margin-bottom: 10px;
-    font-size: 24px;
-}
-
-.team-member p {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 15px;
-}
-
-.team-member a:hover {
-    text-decoration: underline;
+.productCounts{
+    color: #FFF;
 }
 
 @media (max-width: 992px) {

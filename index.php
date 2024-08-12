@@ -3,7 +3,7 @@ include("./includes/header.php");
 
 ?>
 <div class="location">
-    <h1>Landing Page</h1>
+    <!-- <h1>Landing Page</h1> -->
 </div>
 <?php include("./includes/LandingPage/heroSection.inc.php"); ?>
 </header>

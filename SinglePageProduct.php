@@ -6,16 +6,17 @@ $productId = $_GET['pro_id'];
 
 <?php include "./includes/header.php"; ?>
 <div class="product-container">
-    <div class="images-container">
+    <div class="images-container2">
         <div class="product-main-image">
-            <img id="mainImage" src=".<?php echo htmlspecialchars($productImages[0]['img_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?>">
+            <img id="mainImage" src="./adminDashOldHouse/uploads/<?php echo htmlspecialchars($productImages[0]['img_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?>">
         </div>
 
         <div class="product-images">
+            <img class="thumbnail" id="mainImage" src="./adminDashOldHouse/uploads/<?php echo htmlspecialchars($productImages[0]['img_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?>">
             <?php
             unset($productImages[0]);
             foreach ($productImages as $index => $image) : ?>
-                <img class="thumbnail" data-index="<?php echo $index; ?>" src=".<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?>">
+                <img class="thumbnail" data-index="<?php echo $index; ?>" src="./adminDashOldHouse/uploads/<?php echo htmlspecialchars($image['img_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?>">
             <?php endforeach; ?>
         </div>
     </div>
@@ -23,7 +24,7 @@ $productId = $_GET['pro_id'];
 
     <div class="product-details">
         <h1><?php echo htmlspecialchars($product['pro_name'], ENT_QUOTES, 'UTF-8'); ?></h1>
-        <p class="product-price">$<?php echo htmlspecialchars($product['pro_price'], ENT_QUOTES, 'UTF-8'); ?></p>
+        <p class="product-price"> JOD <?php echo htmlspecialchars($product['pro_price'], ENT_QUOTES, 'UTF-8'); ?></p>
         <p class="product-description">
             <?php echo $product['pro_desc']; ?>
         </p>
@@ -40,7 +41,7 @@ $productId = $_GET['pro_id'];
     </div>
 </div>
 <?php include "./includes/footer.php"; ?>
-<script src="http://localhost/learningPHP/Old-House/js/index.js?v=<?php echo time(); ?>"></script>
+<script src="./js/index.js?v<?php echo time(); ?>"></script>
 </body>
 
 </html>

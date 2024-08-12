@@ -2,7 +2,7 @@
 session_start();
 include("../includes/connection2.php");
 
-
+// Form processing for adding a category
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_cat"])) {
     $cat_name = trim($_POST["Category_Name"]);
     $cat_image = null;
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_cat"])) {
 // Fetch categories
 $categories = [];
 try {
-    $sql = "SELECT cat_id, cat_name FROM Category WHERE delete_status = 'no' ORDER BY cat_id ";
+    $sql = "SELECT cat_id, cat_name FROM Category WHERE delete_status = 'no' ORDER BY cat_id";
     $result = $conn->query($sql);
     if ($result) {
         while ($row = $result->fetch_assoc()) {
@@ -74,10 +74,36 @@ try {
     $_SESSION['error'] = "Error: " . $e->getMessage();
 }
 
-$conn->close();
+// Handle deletion
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_button'])) {
+    // $deleteSuccess = false;
+    $catID = $_POST['delete_button'];
 
-include("../includes/header.php");
+    $conn->begin_transaction();
+
+    try {
+        $stmt = $conn->prepare("UPDATE Category SET delete_status = 'yes' WHERE cat_id = ?");
+        $stmt->bind_param("i", $catID);
+        $stmt->execute();
+        $stmt->close();
+
+        $conn->commit();
+        // $deleteSuccess = true;
+        $_SESSION['delete_success'] = true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['delete_error'] = "Error deleting category: " . $e->getMessage();
+    }
+
+    // Redirect to avoid form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+$conn->close();
 ?>
+
+<?php include("../includes/header.php"); ?>
 
 <div class="card m-t-25">
     <div class="card-header">
@@ -112,7 +138,6 @@ include("../includes/header.php");
 
 <div class="row overflow">
     <div class="col-md-12">
-        <!-- DATA TABLE -->
         <h3 class="title-5 m-b-35">Category List</h3>
 
         <div class="table-responsive table-responsive-data2">
@@ -122,7 +147,6 @@ include("../includes/header.php");
                         <th>Category ID</th>
                         <th>Category Name</th>
                         <th>Actions</th>
-
                     </tr>
                 </thead>
                 <tbody id="categoryTableBody">
@@ -131,14 +155,17 @@ include("../includes/header.php");
                             <tr class="tr-shadow">
                                 <td><?= htmlspecialchars($category["cat_id"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($category["cat_name"], ENT_QUOTES, 'UTF-8') ?></td>
-                                <td>
+                                <td class=" d-flex  align-items-center">
                                     <div class="table-data-feature">
                                         <a href="editCat.php?cat_id=<?= htmlspecialchars($category['cat_id'], ENT_QUOTES, 'UTF-8') ?>" class="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                             <i class="zmdi zmdi-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0);" class="item" data-toggle="tooltip" data-placement="top" title="Delete" onclick="confirmDelete(<?= $category['cat_id']; ?>)">
-                                            <i class="zmdi zmdi-delete"></i>
-                                        </a>
+                                        <form id='deleteForm<?= $category['cat_id']; ?>' action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post' style='display:inline;'>
+                                            <input type='hidden' name='delete_button' value='<?= $category['cat_id']; ?>'>
+                                            <button type='button' onclick='confirmDelete(<?= $category["cat_id"]; ?>)' class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -152,26 +179,43 @@ include("../includes/header.php");
                 </tbody>
             </table>
         </div>
-        <!-- END DATA TABLE -->
     </div>
 </div>
+
 <script>
-    function confirmDelete(catId) {
+    function confirmDelete(catID) {
         Swal.fire({
-            title: "Are you sure?",
+            title: 'Are You Sure You Want To Delete',
             text: "You won't be able to revert this!",
-            icon: "warning",
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Redirect to the delete page
-                window.location.href = "deleteCat.php?cat_id=" + catId;
+                sessionStorage.setItem('deleteConfirmed', 'true');
+                document.getElementById('deleteForm' + catID).submit();
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (sessionStorage.getItem('deleteConfirmed') === 'true') {
+            sessionStorage.removeItem('deleteConfirmed');
+            <?php
+            if (isset($_SESSION['delete_success'])) {
+                unset($_SESSION['delete_success']);
+                echo "Swal.fire('Deleted!', 'The category has been deleted successfully.', 'success');";
+            } elseif (isset($_SESSION['delete_error'])) {
+                $errorMessage = $_SESSION['delete_error'];
+                unset($_SESSION['delete_error']);
+                echo "Swal.fire('Error!', '" . addslashes($errorMessage) . "', 'error');";
+            }
+            ?>
+        }
+    });
 </script>
 
 <?php include("../includes/footer.php"); ?>

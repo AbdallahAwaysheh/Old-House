@@ -33,5 +33,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
   document.querySelector('.prev').addEventListener('click', () => plusSlides(-1));
   document.querySelector('.next').addEventListener('click', () => plusSlides(1));
 });
+document.addEventListener("DOMContentLoaded", function () {
+  const mainImage = document.getElementById("mainImage");
+  const thumbnails = document.querySelectorAll(".thumbnail");
 
+  thumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener("click", function () {
+      // Get the source of the clicked thumbnail
+      const newSrc = this.src;
 
+      // Set the main image source to the clicked thumbnail source
+      mainImage.src = newSrc;
+
+      // Optional: Add active class to the clicked thumbnail
+      thumbnails.forEach((thumb) => thumb.classList.remove("active"));
+      this.classList.add("active");
+    });
+  });
+});

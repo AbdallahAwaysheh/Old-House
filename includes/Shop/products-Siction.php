@@ -61,10 +61,10 @@ $products = $productsObject->readProducts();
                                 <div class="product-card">
                                     <div class="product-image">
                                         <a href="SinglePageProduct.php?pro_id=<?php echo htmlspecialchars($product['pro_id']); ?>">
-                                            <img src=".<?php
-                                                        $productImage = $productsObject->getProductImage($product["pro_id"]);
-                                                        echo htmlspecialchars($productImage, ENT_QUOTES, 'UTF-8');
-                                                        ?>">
+                                            <img src="./adminDashOldHouse/uploads/<?php
+                                                                                    $productImage = $productsObject->getProductImage($product["pro_id"]);
+                                                                                    echo htmlspecialchars($productImage, ENT_QUOTES, 'UTF-8');
+                                                                                    ?>">
                                         </a>
                                     </div>
                                     <div class="product-info">

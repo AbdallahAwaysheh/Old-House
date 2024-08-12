@@ -51,6 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["edit_cat"])) {
 
 include("../includes/header.php");
 ?>
+<div class="d-flex flex-row-reverse">
+    <a href="manage_category.php" class="btn btn-primary">Back</a>
+</div>
 
 <div class="card m-t-25">
     <div class="card-header">

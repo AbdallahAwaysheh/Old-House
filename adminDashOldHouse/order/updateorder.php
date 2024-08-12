@@ -55,7 +55,13 @@ $order = $order_result->fetch_assoc();
 ?>
 
 <div class="container mt-4">
-    <h2>Update Order Status</h2>
+
+    <header class="d-flex justify-content-between my-4">
+        <h2>Update Order Status</h2>
+        <div>
+            <a href="order_details.php?order_id=<?= htmlspecialchars($order_id, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-primary">Back</a>
+        </div>
+    </header>
 
     <?php if ($message) : ?>
         <div class="alert alert-info"><?php echo $message; ?></div>

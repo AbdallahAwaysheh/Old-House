@@ -37,8 +37,9 @@ if (isset($productId)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="http://localhost/css/style.css">
-    <link rel="stylesheet" href="http://localhost/css/sections-styles.css">
+    <link rel="stylesheet" href="http://localhost/learnphp/Old-House/css/style.css?v<?php echo time(); ?>">
+    <link rel="stylesheet" href="http://localhost/learnphp/Old-House/css/sections-styles.css?v<?php echo time(); ?>">
+    <link rel="stylesheet" href="http://localhost/learnphp/Old-House/css/aboutUs.css?v<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/freeps2/a7rarpress@main/swiper-bundle.min.css">
     <title>landingPage</title>
 </head>
@@ -54,22 +55,20 @@ if (isset($productId)) {
                 <div class="nav-links-container" id="navLinks">
                     <a class="nav-link" href="index.php">Home</a>
                     <a class="nav-link" href="shop.php">Shop</a>
-                    <a class="nav-link" href="about.html">About us</a>
-                    <a class="nav-link" href="services.html">Services</a>
-                    <a class="nav-link" href="contact.html">Contact us</a>
+                    <a class="nav-link" href="aboutUs.inc.php">About us</a>
                 </div>
                 <div class="icons-container">
                     <?php if (!isset($userID)) : ?>
-                        <a href="http://localhost/adminDashOldHouse/login/login.php"><img src="http://localhost/images/login.svg" alt="Profile"></a>
+                        <a href="http://localhost/learnphp/Old-House/adminDashOldHouse/login/login.php"><img src="http://localhost/learnphp/Old-House/images/login.svg" alt="Profile"></a>
                     <?php else : ?>
-                        <a href="http://localhost/includes/Shop/logout.php"><img src="http://localhost/images/logout.svg" alt="Profile"></a>
+                        <a href="http://localhost/learnphp/Old-House/includes/Shop/logout.php"><img src="http://localhost/learnphp/Old-House/images/logout.svg" alt="Profile"></a>
                     <?php endif; ?>
                     <a href="./cart.php"><img src="./images/cart.svg" alt="Shop"></a>
-                    <span><?php
-                            if (isset($cartarray)) {
-                                echo $cartarray;
-                            }
-                            ?></span>
+                    <span class="productCounts"><?php
+                                                if (isset($cartarray)) {
+                                                    echo $cartarray;
+                                                }
+                                                ?></span>
                 </div>
             </div>
         </nav>

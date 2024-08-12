@@ -103,99 +103,102 @@ if (isset($_GET['order_id'])) {
 ?>
 
 
-    <div class="container my-4">
-        <header class="d-flex justify-content-between my-4">
-            <h1>Order Details #<?php echo htmlspecialchars($order_id, ENT_QUOTES, 'UTF-8'); ?></h1>
-        </header>
-        <div class="p-5 my-4">
-            <?php if (!empty($orderDetails)) : ?>
-                <?php
-                $subTotal = 0;
-                $deliveryFee = 5.00; // Fixed delivery fee
-                $firstDetail = $orderDetails[0]; // Get the first detail to display general order info
-                ?>
-                <h3>Order ID:</h3>
-                <p><?php echo htmlspecialchars($firstDetail["order_id"], ENT_QUOTES, 'UTF-8'); ?></p>
-                <h3>Order Date:</h3>
-                <p><?php echo htmlspecialchars($firstDetail["order_date"], ENT_QUOTES, 'UTF-8'); ?></p>
-                <h3>Customer Name:</h3>
-                <p><?php echo htmlspecialchars($firstDetail["customer_name"], ENT_QUOTES, 'UTF-8'); ?></p>
-                <h3>Shipping Address:</h3>
-                <p><?php echo htmlspecialchars($firstDetail["shippingAddress"] . " " . $firstDetail["shippingCity"], ENT_QUOTES, 'UTF-8'); ?></p>
-
-                <div class="table-responsive">
-                    <table class="table table-data2">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($orderDetails as $detail) :
-                                $sengleProductTotal = number_format($detail['price_per_product'], 2) * htmlspecialchars($detail['quantity'], ENT_QUOTES, 'UTF-8');
-                                $subTotal += $sengleProductTotal;
-                            ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($detail['product_name'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td><?php echo htmlspecialchars($detail['quantity'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td>JOD <?php echo number_format($detail['price_per_product'], 2); ?></td>
-                                    <td>JOD <?php echo $sengleProductTotal; ?></td>
-                                </tr>
-                                <tr class="spacer"></tr>
-                            <?php endforeach; ?>
-                            <tr>
-                                <td colspan="3" class="text-right">Sub-Total</td>
-                                <td>JOD <?php echo number_format($subTotal, 2); ?></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="text-right">2-3 Days Delivery</td>
-                                <td>JOD <?php echo number_format($deliveryFee, 2); ?></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="text-right">Total</td>
-                                <td>JOD <?php
-                                        $total = $subTotal + $deliveryFee;
-                                        echo number_format($total, 2);
-                                        storeTotal($total, $order_id);
-                                        ?></td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3>Order History</h3>
-                <div class="table-responsive">
-                    <table class="table table-data2">
-                        <thead>
-                            <tr>
-                                <th>Remark</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($orderHistory as $history) : ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($history['remark'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td><?php echo htmlspecialchars($history['status'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td><?php echo htmlspecialchars($history['posting_date'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                </tr>
-                                <tr class="spacer"></tr>
-                            <?php endforeach; ?>
-                            <tr>
-                                <td colspan="4"> <a href="updateorder.php?order_id=<?php echo htmlentities($order_id); ?>" title="Update order" class="btn btn-primary">Take Action</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else : ?>
-                <h3>No order found</h3>
-            <?php endif; ?>
+<div class="container my-4">
+    <header class="d-flex justify-content-between my-4">
+        <h1>Order Details #<?php echo htmlspecialchars($order_id, ENT_QUOTES, 'UTF-8'); ?></h1>
+        <div>
+            <a href="manage_order.php" class="btn btn-primary">Back</a>
         </div>
+    </header>
+    <div class="p-5 my-4">
+        <?php if (!empty($orderDetails)) : ?>
+            <?php
+            $subTotal = 0;
+            $deliveryFee = 5.00; // Fixed delivery fee
+            $firstDetail = $orderDetails[0]; // Get the first detail to display general order info
+            ?>
+            <h3>Order ID:</h3>
+            <p><?php echo htmlspecialchars($firstDetail["order_id"], ENT_QUOTES, 'UTF-8'); ?></p>
+            <h3>Order Date:</h3>
+            <p><?php echo htmlspecialchars($firstDetail["order_date"], ENT_QUOTES, 'UTF-8'); ?></p>
+            <h3>Customer Name:</h3>
+            <p><?php echo htmlspecialchars($firstDetail["customer_name"], ENT_QUOTES, 'UTF-8'); ?></p>
+            <h3>Shipping Address:</h3>
+            <p><?php echo htmlspecialchars($firstDetail["shippingAddress"] . " " . $firstDetail["shippingCity"], ENT_QUOTES, 'UTF-8'); ?></p>
+
+            <div class="table-responsive">
+                <table class="table table-data2">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orderDetails as $detail) :
+                            $sengleProductTotal = number_format($detail['price_per_product'], 2) * htmlspecialchars($detail['quantity'], ENT_QUOTES, 'UTF-8');
+                            $subTotal += $sengleProductTotal;
+                        ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($detail['product_name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($detail['quantity'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td>JOD <?php echo number_format($detail['price_per_product'], 2); ?></td>
+                                <td>JOD <?php echo $sengleProductTotal; ?></td>
+                            </tr>
+                            <tr class="spacer"></tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td colspan="3" class="text-right">Sub-Total</td>
+                            <td>JOD <?php echo number_format($subTotal, 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-right">2-3 Days Delivery</td>
+                            <td>JOD <?php echo number_format($deliveryFee, 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-right">Total</td>
+                            <td>JOD <?php
+                                    $total = $subTotal + $deliveryFee;
+                                    echo number_format($total, 2);
+                                    storeTotal($total, $order_id);
+                                    ?></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Order History</h3>
+            <div class="table-responsive">
+                <table class="table table-data2">
+                    <thead>
+                        <tr>
+                            <th>Remark</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orderHistory as $history) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($history['remark'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($history['status'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($history['posting_date'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            </tr>
+                            <tr class="spacer"></tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td colspan="4"> <a href="updateorder.php?order_id=<?php echo htmlentities($order_id); ?>" title="Update order" class="btn btn-primary">Take Action</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <?php else : ?>
+            <h3>No order found</h3>
+        <?php endif; ?>
     </div>
-    <?php include("../includes/footer.php") ?>
+</div>
+<?php include("../includes/footer.php") ?>

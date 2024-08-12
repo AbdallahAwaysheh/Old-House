@@ -101,7 +101,7 @@
              <header class="header-desktop">
                  <div class="section__content section__content--p30">
                      <div class="container-fluid">
-                         <div class="header-wrap">
+                         <div class="header-wrap d-flex flex-row-reverse">
                              <!-- <form class="form-header" action="" method="POST">
                                  <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
                                  <button class="au-btn--submit" type="submit">
@@ -110,7 +110,7 @@
                              </form> -->
                              <a href="../login/login.php">
                                  <i class="zmdi zmdi-power m-r-15"></i>Logout</a>
-                             
+
                          </div>
                      </div>
                  </div>

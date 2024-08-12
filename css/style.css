@@ -82,55 +82,86 @@ main {
 /* header end */
 /* table start */
 .order-table {
-  padding: 20px 10px;
+  padding: 25px;
   overflow-x: auto;
+  background: linear-gradient(135deg, #f0f0f0 25%, #ffffff 100%); /* خلفية متدرجة */
+  border-radius: 15px; /* زوايا مستديرة أكثر */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* ظل أكثر وضوحًا */
 }
 
 .order-table table {
   width: 100%;
-  padding: 10px;
-  text-align: center;
-  border-collapse: collapse;
+  padding: 15px;
+  text-align: left; /* النصوص تبدأ من اليسار */
+  border-collapse: separate;
+  border-spacing: 0 10px; /* مسافات بين الصفوف */
+  background-color: #ffffff; /* خلفية بيضاء للجدول */
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .table-header {
   width: 100%;
-  border-bottom: 2px solid black;
+  border-collapse: collapse;
+  background-color: rgb(184, 182, 182); 
+  color: #3b5d50; 
+  font-size: 1.1em;
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
 }
 
 .table-header-cell {
-  padding: 10px;
+  padding: 15px 20px; 
+  
 }
 
 .table-row {
   width: 100%;
-  border-bottom: 2px solid rgb(230, 225, 225);
+  background-color: #f9f9f9; /* خلفية خفيفة للصفوف */
+  border-bottom: 1px solid #dddddd;
+  border-radius: 8px; /* زوايا مستديرة للصفوف */
+  transition: transform 300ms ease, background-color 300ms ease; /* تأثيرات عند التمرير */
+}
+
+.table-row:hover {
+  transform: scale(1.02); /* تكبير الصف عند التمرير */
+  background-color: #e6ffe6; /* لون خفيف عند التمرير */
 }
 
 .product-image {
-  width: 100%;
   display: flex;
   justify-content: center;
+  padding: 10px;
 }
 
 .product-image img {
-  width: 150px;
+  width: 120px; /* حجم أصغر للصورة */
+  border-radius: 10px; /* زوايا مستديرة للصورة */
+  transition: transform 300ms ease, box-shadow 300ms ease; /* تأثيرات عند التمرير */
+}
+
+.product-image img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للصورة */
 }
 
 .remove-icon {
-  width: 20px;
-  transition: 500ms ease;
+  width: 25px;
+  cursor: pointer;
+  transition: transform 300ms ease; /* تأثير عند التمرير */
 }
 
 .remove-icon:hover {
-  width: 30px;
-  transition: 500ms ease;
+  transform: rotate(45deg); /* تدوير الأيقونة عند التمرير */
 }
 
 .quantity {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   text-align: center;
+  border: 1px solid #cccccc;
+  border-radius: 10px; /* زوايا مستديرة */
+  font-size: 1.1em; /* حجم خط أكبر */
 }
 
 /* table end */
@@ -140,7 +171,9 @@ main {
   background-color: #fff;
   border: 1px solid #ccc;
   margin: 20px 10px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #f0f0f0 25%, #ffffff 100%); /* خلفية متدرجة */
+  border-radius: 15px; /* زوايا مستديرة أكثر */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* ظل أكثر وضوحًا */
 }
 
 .check-out h3 {
@@ -662,7 +695,16 @@ a {
   padding: 12px;
   text-align: left;
 }
+.thumbnail {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
 
+.thumbnail:hover,
+.thumbnail.active {
+  opacity: 1;
+}
 .cart-container th {
   background-color: #f2f2f2;
 }

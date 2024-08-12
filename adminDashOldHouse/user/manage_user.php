@@ -2,17 +2,19 @@
 session_start();
 include("../includes/connection2.php");
 
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $type = $_SESSION['flash_type'];
+    unset($_SESSION['flash_message']);
+    unset($_SESSION['flash_type']);
+    echo "<div class='alert alert-{$type}'>{$message}</div>";
+}
+
 // Fetch users from the database
 $sqlFetchUsers = "SELECT cus_id, cus_fname, cus_lname, cus_email, mobile, shippingAddress, shippingCity FROM customers WHERE delete_status = 'no'";
 $result = $conn->query($sqlFetchUsers);
 
-if ($result) {
-    $users = $result->fetch_all(MYSQLI_ASSOC);
-} else {
-    die("Something went wrong: " . $conn->error);
-}
-
-// Form processing
+// Form processing for adding a customer
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_Customer"])) {
     $cus_fname = $_POST["cus_fname"];
     $cus_lname = $_POST["cus_lname"];
@@ -21,24 +23,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_Customer"])) {
     $shippingAddress = $_POST["shippingAddress"];
     $shippingCity = $_POST["shippingCity"];
     $cus_pass = $_POST["cus_pass"];
-
     $sqlInsert = "INSERT INTO customers (cus_fname, cus_lname, cus_email, mobile, shippingAddress, shippingCity, cus_pass) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sqlInsert);
 
-    if ($stmt) {
-        // Bind parameters
-        $stmt->bind_param("sssssss", $cus_fname, $cus_lname, $cus_email, $mobile, $shippingAddress, $shippingCity, $cus_pass);
-
-        // Execute the statement
-        if ($stmt->execute()) {
-            // Store success message in session
-            $_SESSION['message'] = "Customer added successfully!";
-        } else {
-            $_SESSION['error'] = "Something went wrong: " . $stmt->error;
-        }
-        $stmt->close();
+    if ($stmt->execute()) {
+        $_SESSION['flash_message'] = "Customer added successfully!";
+        $_SESSION['flash_type'] = "success";
     } else {
-        $_SESSION['error'] = "Something went wrong: " . $conn->error;
+        $_SESSION['flash_message'] = "Something went wrong: " . $stmt->error;
+        $_SESSION['flash_type'] = "error";
+    }
+    $stmt->close();
+
+    // Redirect to avoid form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+if ($result) {
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    die("Something went wrong: " . $conn->error);
+}
+
+// Handle deletion
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cus_id'])) {
+    $deleteSuccess = false;
+    $cusID = $_POST['cus_id'];
+
+    $conn->begin_transaction();
+
+    try {
+        $stmt = $conn->prepare("UPDATE customers SET delete_status = 'yes' WHERE cus_id = ?");
+        $stmt->bind_param("i", $cusID);
+        $stmt->execute();
+        $stmt->close();
+
+        $conn->commit();
+        $deleteSuccess = true;
+        $_SESSION['delete_success'] = true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['delete_error'] = "Error deleting customer: " . $e->getMessage();
     }
 
     // Redirect to avoid form resubmission
@@ -46,25 +72,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["add_Customer"])) {
     exit();
 }
 
-include("../includes/header.php");
-?>
+if (isset($deleteSuccess)) : ?>
+    <script>
+        window.onload = function() {
+            <?php if ($deleteSuccess) : ?>
+                Swal.fire('Deleted!', 'The customer has been deleted successfully.', 'success');
+            <?php else : ?>
+                Swal.fire('Error!', '<?php echo $errorMessage; ?>', 'error');
+            <?php endif; ?>
+        }
+    </script>
+<?php endif; ?>
+
+<?php include("../includes/header.php"); ?>
 
 <div class="card m-t-25">
     <div class="card-header">
         <strong>Add Customer</strong> Form
     </div>
     <div class="card-body card-block">
-        <?php
-        // Display messages
-        if (isset($_SESSION['message'])) {
-            echo '<div class="alert alert-success">' . $_SESSION['message'] . '</div>';
-            unset($_SESSION['message']);
-        } elseif (isset($_SESSION['error'])) {
-            echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
-            unset($_SESSION['error']);
-        }
-        ?>
-        <!-- start form -->
         <form action="" method="post">
             <div class="form-group">
                 <label for="cus_fname" class="form-control-label">User First Name</label>
@@ -99,22 +125,19 @@ include("../includes/header.php");
                 <i class="fa fa-ban"></i> Reset
             </button>
         </form>
-        <!-- end form -->
     </div>
 </div>
 
 <div class="row overflow">
     <div class="col-md-12">
-        <!-- DATA TABLE -->
         <h3 class="title-5 m-b-35">Manage Users</h3>
-
         <div class="table-responsive table-responsive-data2">
             <table class="table table-data2">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>User First Name</th>
-                        <th>User Last Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Email</th>
                         <th>Mobile</th>
                         <th>Address</th>
@@ -137,12 +160,15 @@ include("../includes/header.php");
                                 <td><?php echo $row["shippingCity"] ?></td>
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="edit_user.php?cus_id=<?php echo htmlspecialchars($row['cus_id'], ENT_QUOTES, 'UTF-8'); ?>" class="item">
+                                        <a href="edit_user.php?cus_id=<?php echo htmlspecialchars($row['cus_id'], ENT_QUOTES, 'UTF-8'); ?>" class="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                             <i class="zmdi zmdi-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0);" class="item" data-toggle="tooltip" data-placement="top" title="Delete" onclick="confirmDelete(<?php echo $row['cus_id']; ?>)">
-                                            <i class="zmdi zmdi-delete"></i>
-                                        </a>
+                                        <form id='deleteForm<?php echo $row['cus_id']; ?>' action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post' style='display:inline;'>
+                                            <input type='hidden' name='cus_id' value='<?php echo $row['cus_id']; ?>'>
+                                            <button type='button' onclick='confirmDelete(<?php echo $row["cus_id"]; ?>)' class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -155,31 +181,48 @@ include("../includes/header.php");
                         </tr>";
                     }
                     ?>
-
                 </tbody>
             </table>
         </div>
-        <!-- END DATA TABLE -->
     </div>
 </div>
+
 <script>
     function confirmDelete(userID) {
         Swal.fire({
-            title: "Are you sure?",
+            title: 'Are You Sure You Want To Delete',
             text: "You won't be able to revert this!",
-            icon: "warning",
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Redirect to the delete page
-                window.location.href = "delete_user.php?cus_id=" + userID;
+                // Set a flag in session storage to indicate deletion was confirmed
+                sessionStorage.setItem('deleteConfirmed', 'true');
+                document.getElementById('deleteForm' + userID).submit();
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if deletion was confirmed and successful
+        if (sessionStorage.getItem('deleteConfirmed') === 'true') {
+            sessionStorage.removeItem('deleteConfirmed');
+            <?php
+            if (isset($_SESSION['delete_success'])) {
+                unset($_SESSION['delete_success']);
+                echo "Swal.fire('Deleted!', 'The customer has been deleted successfully.', 'success');";
+            } elseif (isset($_SESSION['delete_error'])) {
+                $errorMessage = $_SESSION['delete_error'];
+                unset($_SESSION['delete_error']);
+                echo "Swal.fire('Error!', '" . addslashes($errorMessage) . "', 'error');";
+            }
+            ?>
+        }
+    });
 </script>
-<?php
-include("../includes/footer.php");
-?>
+
+<?php include("../includes/footer.php"); ?>
